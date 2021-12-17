@@ -1,5 +1,7 @@
 package com.company;
 
+import org.json.simple.JSONObject;
+
 public class ItemSpec {
     private String name;
     private String description;
@@ -25,8 +27,14 @@ public class ItemSpec {
         return price * (1.0 - this.discountRate);
     }
 
-    public String encode() {
-        return " **[ItemSpec] need implementation** ";
+    public JSONObject encode() {
+        JSONObject encoding = new JSONObject();
+        encoding.put("Name", this.name);
+        encoding.put("Description", this.description);
+        encoding.put("Price", this.price);
+        encoding.put("Picture", this.pictureLink);
+        encoding.put("In Stock?", this.inStock);
+        return encoding;
     }
 
 }

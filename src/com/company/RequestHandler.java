@@ -1,22 +1,47 @@
 package com.company;
 
-public class System {
+import org.json.simple.JSONObject;
+
+import java.util.Map;
+
+public class RequestHandler {
     private Cart cart;
     private Address address;
     private int invalidDiscountCount;
     private DatabaseHandler databaseHandler;
 
-    public System(DatabaseHandler databaseHandler) {
+    public RequestHandler(DatabaseHandler databaseHandler) {
         this.databaseHandler = databaseHandler;
         this.invalidDiscountCount = 0;
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public JSONObject execute(JSONObject request) throws DummyDatabase.CartNotExistException, DatabaseHandler.DiscountTargetNotExistException, DummyDatabase.DiscountNotExistException, DummyDatabase.ItemNotExistException, DatabaseHandler.ItemOutOfStockException, DatabaseHandler.ItemNotInCartException, DatabaseHandler.NegativeQuantityException, TooManyInvalidCodesException, DatabaseHandler.DiscountItemMissingException, DatabaseHandler.DiscountExpiredException, InvalidRequestException {
+        String work = (String) request.get("work");
+        int cartId = (int) request.get("cartId");
+        JSONObject address = (JSONObject) request.get("address");
+        this.setAddress(address);
+        if (work.equals("updateCart")) {
+        } else if (work.equals("addToCart")) {
+            int itemId = (int) request.get("itemId");
+            int quantity = (int) request.get("quantity");
+            this.handleAddToCart(cartId, itemId, quantity);
+        } else if (work.equals("modifyCart")) {
+            int itemId = (int) request.get("itemId");
+            int quantity = (int) request.get("quantity");
+            this.handleModifyCart(cartId, itemId, quantity);
+        } else if (work.equals("applyDiscount")) {
+            int discountCode = (int) request.get("discountCode");
+            this.handleApplyDiscount(cartId, discountCode);
+        } else {
+            throw new InvalidRequestException("Request [" + work + "] is invalid");
+        }
+        this.retrieveUpdatedCart(cartId);
+        return cart.encode(this.address);
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddress(JSONObject address) {
+        if ((boolean) address.get("valid")) this.address = new Address(true, (int) address.get("postCode"), (String) address.get("address"));
+        else this.address = new Address(false, 0, null);
     }
 
     public void retrieveUpdatedCart(int cartId) throws DummyDatabase.DiscountNotExistException, DatabaseHandler.DiscountTargetNotExistException, DummyDatabase.CartNotExistException, DummyDatabase.ItemNotExistException {
@@ -49,6 +74,12 @@ public class System {
 
     public class TooManyInvalidCodesException extends Exception {
         public TooManyInvalidCodesException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
+
+    public class InvalidRequestException extends Exception {
+        public InvalidRequestException(String errorMessage) {
             super(errorMessage);
         }
     }

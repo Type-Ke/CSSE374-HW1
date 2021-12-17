@@ -1,5 +1,8 @@
 package com.company;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 
 public class Cart {
@@ -47,8 +50,36 @@ public class Cart {
         throw new ItemNotInCartException("Item " + Integer.toString(itemId) + " is not in cart " + Integer.toString(this.id));
     }
 
-    public String encode(Address address) {
-        return " **[Cart] need implementation** ";
+    public JSONObject encode(Address address) {
+        JSONObject encoding = new JSONObject();
+        encoding.put("Cart id", this.id);
+        int numCount = 0;
+        for (Item item :
+                this.items) {
+            numCount += item.getQuantity();
+        }
+        encoding.put("Total number", numCount);
+        JSONArray itemList = new JSONArray();
+        for (Item item :
+                this.items) {
+            itemList.add(item.encode());
+        }
+        encoding.put("Items", itemList);
+        double costSum = this.sumCost();
+        double discountsSum = this.sumDiscounts();
+        encoding.put("Sum of discounts", discountsSum);
+        JSONObject costs = new JSONObject();
+        costs.put("Cost of items", costSum);
+        costs.put("Discounts", discountsSum);
+        try {
+            costs.put("Estimated taxes", address.calculateTax(costSum));
+        } catch (Address.TaxCalculationNotAvailableException e) {
+            costs.put("Estimated taxes", "Tex calculation not available.");
+        } catch (Address.InvalidAddressException e) {
+            costs.put("Estimated taxes", "Invalid address.");
+        }
+        encoding.put("Total costs", costs);
+        return encoding;
     }
 
     public class ItemNotInCartException extends Exception {

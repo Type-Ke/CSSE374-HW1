@@ -18,6 +18,94 @@ public class DummyDatabase {
     private HashMap<Integer, ArrayList<Integer>> complexDiscountItemLists;
     private ArrayList<Integer> expiredDiscounts;
 
+    public DummyDatabase() {
+        this.itemNames = new HashMap<>();
+        this.itemDescriptions = new HashMap<>();
+        this.itemPrices = new HashMap<>();
+        this.itemDiscountRates = new HashMap<>();
+        this.itemPictureLinks = new HashMap<>();
+        this.itemStocks = new HashMap<>();
+
+        this.itemNames.put(101, "CocaCola");
+        this.itemDescriptions.put(101, "CocaCola's best selling product.");
+        this.itemPrices.put(101, 2.0);
+        this.itemDiscountRates.put(101, 0.25);
+        this.itemPictureLinks.put(101, "http://cocacola.png");
+        this.itemStocks.put(101, true);
+
+        this.itemNames.put(102, "Dr. Pepper");
+        this.itemDescriptions.put(102, "A strange kind of drink.");
+        this.itemPrices.put(102, 2.0);
+        this.itemDiscountRates.put(102, 0.0);
+        this.itemPictureLinks.put(102, "http://drpepper.png");
+        this.itemStocks.put(102, false);
+
+        this.itemNames.put(103, "Arizona Tea");
+        this.itemDescriptions.put(103, "Sweet tea. Very good tasting.");
+        this.itemPrices.put(103, 4.0);
+        this.itemDiscountRates.put(103, 0.125);
+        this.itemPictureLinks.put(103, "http://arizonatea.png");
+        this.itemStocks.put(103, true);
+
+        this.itemNames.put(104, "Sprite");
+        this.itemDescriptions.put(104, "CocaCola's second best selling product.");
+        this.itemPrices.put(104, 2.0);
+        this.itemDiscountRates.put(104, 0.0);
+        this.itemPictureLinks.put(104, "http://sprite.png");
+        this.itemStocks.put(104, true);
+
+
+        this.discountSimpleChecks = new HashMap<>();
+        this.discountRates = new HashMap<>();
+        this.simpleDiscountItems = new HashMap<>();
+        this.complexDiscountItemLists = new HashMap<>();
+        this.expiredDiscounts = new ArrayList<>();
+
+        this.discountSimpleChecks.put(1011, true);
+        this.discountRates.put(1011, 0.5);
+        this.simpleDiscountItems.put(1011, 101);
+
+        this.discountSimpleChecks.put(1012, true);
+        this.discountRates.put(1012, 0.25);
+        this.simpleDiscountItems.put(1012, 102);
+
+        this.discountSimpleChecks.put(1013, true);
+        this.discountRates.put(1013, 0.1);
+        this.simpleDiscountItems.put(1013, 103);
+
+        this.discountSimpleChecks.put(1014, true);
+        this.discountRates.put(1014, 0.25);
+        this.simpleDiscountItems.put(1014, 104);
+
+        this.discountSimpleChecks.put(1015, false);
+        this.discountRates.put(1015, 0.5);
+        ArrayList<Integer> itemList1 = new ArrayList<>();
+        itemList1.add(101);
+        itemList1.add(104);
+        this.complexDiscountItemLists.put(1015, itemList1);
+
+        this.discountSimpleChecks.put(1016, false);
+        this.discountRates.put(1016, 0.5);
+        ArrayList<Integer> itemList2 = new ArrayList<>();
+        itemList2.add(102);
+        itemList2.add(103);
+        this.complexDiscountItemLists.put(1016, itemList2);
+
+        this.expiredDiscounts.add(1014);
+
+
+        this.cartItemLists = new HashMap<>();
+        this.cartDiscountLists = new HashMap<>();
+
+        HashMap<Integer, Integer> cartList1 = new HashMap<>();
+        cartList1.put(101, 10);
+        this.cartItemLists.put(24681, cartList1);
+        ArrayList<Integer> discountList1 = new ArrayList<>();
+        discountList1.add(1011);
+        this.cartDiscountLists.put(24681, discountList1);
+    }
+
+
     public boolean discountExpired(int discountCode) {
         return expiredDiscounts.contains(discountCode);
     }

@@ -1,25 +1,34 @@
 package com.company;
 
+import org.json.simple.JSONObject;
+
 public class Item {
     private int id;
     private ItemSpec spec;
-    private int numInCart;
+    private int quantity;
 
-    public Item(int id, ItemSpec spec, int numInCart) {
+    public Item(int id, ItemSpec spec, int quantity) {
         this.id = id;
         this.spec = spec;
-        this.numInCart = numInCart;
+        this.quantity = quantity;
     }
 
     double calculateCost() {
-        return this.numInCart * this.spec.getPriceWithDiscount();
+        return this.quantity * this.spec.getPriceWithDiscount();
     }
 
     public int getId() {
         return id;
     }
 
-    String encode() {
-        return this.spec.encode() + " **[Item] need implementation** ";
+    public int getQuantity() {
+        return quantity;
+    }
+
+    JSONObject encode() {
+        JSONObject encoding = this.spec.encode();
+        encoding.put("Item id", this.id);
+        encoding.put("Quantity", this.quantity);
+        return encoding;
     }
 }
